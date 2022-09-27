@@ -12,20 +12,27 @@ class DetailViewController: UIViewController {
     var postID = 0
     var detailMode = [DetailModel]()
     
+    @IBOutlet weak var activitiIndicator: UIActivityIndicatorView!
     @IBOutlet weak var image: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+ 
         receiveArray()
     }
     
     func receiveArray() {
+        showLoader(loader: activitiIndicator, show: true)
         NetworkJsonManager.fetchJson(urlString: (urlInfoScreen + String(postID) + ".json"), type: DetailModel.self) { json in
             self.detailMode.append(json)
             DispatchQueue.main.async {
                 DataProvider.share.downloadImage(url: self.detailMode[0].post.postImage) { [weak self] image in
                     self?.image.image = image
+                    showLoader(loader: self!.activitiIndicator, show: false)
                 }
             }
         }
     }
+    
+
 }

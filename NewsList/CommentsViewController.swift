@@ -8,12 +8,19 @@
 import UIKit
 
 class CommentsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+
+    
+    var comments = CommentsModel()
+    
     
     @IBOutlet weak var tableView: UITableView!
-    var comments = CommentsModel()
-
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         receiveArray()
     }
     
@@ -22,15 +29,10 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.comments = json
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                
-              
             }
         }
-//        NetworkJsonManager.fetchJson(urlString: urlEquipment, type: ArrayEquipment.self) { arrayEquipment in
-//            self.arrayEquipment = arrayEquipment
-//            self.doArrayToDetail()
-//        }
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comments.posts.count
@@ -39,10 +41,25 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CommentCell
         let comment = comments.posts[indexPath.row]
+        cell.indexCell = indexPath.row
         cell.configure(with: comment)
+        
+        
         return cell
     }
-
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "detail" {
+            let detail = segue.destination as! DetailViewController
+            let cell = sender as! CommentCell
+            detail.postID = comments.posts[cell.indexCell].postID
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
 }
 
 

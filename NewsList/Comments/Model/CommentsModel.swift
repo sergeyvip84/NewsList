@@ -8,10 +8,10 @@
 import Foundation
 
 struct CommentsModel: Codable {
-     var posts = [Post]()
+     var posts = [Posts]()
 }
 
-struct Post: Codable {
+struct Posts: Codable {
     let postID, timeshamp: Int
     let title, previewText: String
     let likesCount: Int

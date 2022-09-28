@@ -9,17 +9,12 @@ import UIKit
 
 class CommentsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    
     var comments = CommentsModel()
-    
     
     @IBOutlet weak var tableView: UITableView!
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         receiveArray()
     }
@@ -32,7 +27,6 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return comments.posts.count
@@ -47,7 +41,6 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         return cell
     }
-    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "detail" {

@@ -27,7 +27,6 @@ class CommentCell: UITableViewCell {
     @IBAction func buttomTap(_ sender: UIButton) {
         buttom.setTitle("Collapse", for: .normal)
         self.laberComment.numberOfLines = 0
-        
        
     }
     

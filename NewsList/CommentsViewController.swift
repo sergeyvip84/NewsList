@@ -8,9 +8,13 @@
 import UIKit
 
 class CommentsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
-    var comments = CommentsModel()
     
+    var timeNow = Int(NSDate().timeIntervalSince1970)
+    
+    var comments = CommentsModel()
+    var activityButtomSorted = false
+    
+    @IBOutlet weak var buttomSorted: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -22,6 +26,8 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     func receiveArray() {
         NetworkJsonManager.fetchJson(urlString: urlComment, type: CommentsModel.self) { json in
             self.comments = json
+            self.comments.posts.sort { $0.timeshamp > $1.timeshamp }
+            
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -34,11 +40,20 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CommentCell
+        
         let comment = comments.posts[indexPath.row]
         cell.indexCell = indexPath.row
+        cell.timeNow = timeNow
         cell.configure(with: comment)
+        cell.laberComment.numberOfLines = comment.expandeCell ? 0 : 2
+        cell.buttom.setTitle(comment.expandeCell ? "Collapse" : "Expande", for: .normal)
         
-        
+        cell.actionHandler = { [weak self] cell in
+            DispatchQueue.main.async {
+                self?.comments.posts[cell.indexCell].expandeCell = !(self?.comments.posts[cell.indexCell].expandeCell)!
+                self?.tableView.reloadData()
+            }
+        }
         return cell
     }
     
@@ -53,7 +68,21 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
     }
+    
+    
+    @IBAction func buttomSorted(_ sender: Any) {
+        if !activityButtomSorted {
+            activityButtomSorted = true
+            buttomSorted.tintColor = .red
+            comments.posts.sort { $0.likesCount > $1.likesCount }
+        } else {
+            activityButtomSorted = false
+            buttomSorted.tintColor = .gray
+            self.comments.posts.sort { $0.timeshamp > $1.timeshamp }
+        }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
 }
-
-
 

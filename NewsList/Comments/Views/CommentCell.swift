@@ -9,7 +9,10 @@ import UIKit
 
 class CommentCell: UITableViewCell {
     
+    var timeNow = 0
     var indexCell = 0
+    
+    var actionHandler: ((CommentCell) -> Void)?
     
     @IBOutlet weak var labelLikes: UILabel!
     @IBOutlet weak var label: UILabel!
@@ -25,17 +28,15 @@ class CommentCell: UITableViewCell {
     }
     
     @IBAction func buttomTap(_ sender: UIButton) {
-        buttom.setTitle("Collapse", for: .normal)
-        self.laberComment.numberOfLines = 0
-       
+        
+        actionHandler?(self)
     }
     
     func configure(with comment: Posts) {
         self.label.text = comment.title
         self.laberComment.text = comment.previewText
-        self.labelTime.text = String(comment.timeshamp)
+        self.labelTime.text = String(Int((timeNow - comment.timeshamp) / 86400)) + " day ago"
         self.labelLikes.text = String(comment.likesCount)
-        self.laberComment.numberOfLines = 2
     }
 }
 

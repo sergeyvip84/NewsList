@@ -11,6 +11,7 @@ class DetailViewController: UIViewController {
     
     var postID = 0
     
+    @IBOutlet weak var likeHearth: UIImageView!
     @IBOutlet weak var labelTime: UILabel!
     @IBOutlet weak var labelLikes: UILabel!
     @IBOutlet weak var labelComment: UITextView!
@@ -26,22 +27,27 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        
         receiveArray()
         
     }
     
     func receiveArray() {
         showLoader(loader: activitiIndicator, show: true)
+        
         NetworkJsonManager.fetchJson(urlString: (urlInfoScreen + String(postID) + ".json"), type: DetailModel.self) { json in
-            DispatchQueue.main.async {
+            
+            DispatchQueue.main.async { [self] in
+                
+                self.likeHearth.isHidden = false
+                self.labelTime.text = createDateTime(timestamp: json.post.timeshamp)
+                self.labelLikes.text = String(json.post.likesCount)
+                self.labelComment.text = json.post.text
+                self.label.text = json.post.title
+                
                 DataProvider.share.downloadImage(url: json.post.postImage) { [weak self] image in
                     
                     self?.image.image = image
-                    self?.labelTime.text = String(json.post.timeshamp)
-                    self?.labelLikes.text = String(json.post.likesCount)
-                   self?.labelComment.text = json.post.text
-                    self?.label.text = json.post.title
                     showLoader(loader: self!.activitiIndicator, show: false)
                     
                 }
@@ -49,5 +55,19 @@ class DetailViewController: UIViewController {
         }
     }
     
-
+    func createDateTime(timestamp: Int) -> String {
+        var strDate = "undefined"
+        
+        let unixTime = Double(timestamp)
+        let date = Date(timeIntervalSince1970: unixTime)
+        let dateFormatter = DateFormatter()
+        let timezone = TimeZone.current.abbreviation() ?? "CET"
+        dateFormatter.timeZone = TimeZone(abbreviation: timezone)
+        dateFormatter.locale = Locale(identifier: "en_US")
+        
+        dateFormatter.dateFormat = "d MMMM yyyy"
+        strDate = dateFormatter.string(from: date)
+        
+        return strDate
+    }
 }

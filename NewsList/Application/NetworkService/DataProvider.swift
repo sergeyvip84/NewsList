@@ -38,7 +38,6 @@ class DataProvider {
                     completion(image)
                 }
             }
-            
             dataTask.resume()
         }
     }

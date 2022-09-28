@@ -15,6 +15,7 @@ struct Posts: Codable {
     let postID, timeshamp: Int
     let title, previewText: String
     let likesCount: Int
+    var expandeCell: Bool = false
 
     enum CodingKeys: String, CodingKey {
         case postID = "postId"

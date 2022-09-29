@@ -69,7 +69,6 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         return UIView()
     }
     
-    
     @IBAction func buttomSorted(_ sender: Any) {
         if !activityButtomSorted {
             activityButtomSorted = true

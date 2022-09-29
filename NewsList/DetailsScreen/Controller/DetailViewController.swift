@@ -29,7 +29,6 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
         
         receiveArray()
-        
     }
     
     func receiveArray() {
@@ -49,7 +48,6 @@ class DetailViewController: UIViewController {
                     
                     self?.image.image = image
                     showLoader(loader: self!.activitiIndicator, show: false)
-                    
                 }
             }
         }
